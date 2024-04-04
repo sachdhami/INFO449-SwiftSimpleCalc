@@ -27,11 +27,71 @@ print("Welcome to the UW Calculator Playground")
 //: For this latter set of operations, it is safe to assume that `["count"]` (with no additional arguments) is 0, `["avg"]` is also 0, and `["fact"]` is 0. `["1", "fact"]` should return 1, and `["0", "fact"]` should also return 1. (Yes, 0-factorial is 1. True story.)
 //: 
 func calculate(_ args: [String]) -> Int {
-    return -1
+    if args.isEmpty {
+            return 0
+        }
+        if let operatorIndex = args.firstIndex(where: { ["+", "-", "*", "/", "%"].contains($0) }) {
+            let left = Int(args[operatorIndex - 1]) ?? 0
+            let right = Int(args[operatorIndex + 1]) ?? 0
+            let operation = args[operatorIndex]
+            
+            switch operation {
+            case "+":
+                return left + right
+            case "-":
+                return left - right
+            case "*":
+                return left * right
+            case "/":
+                
+                if right != 0 {
+                    return left / right
+                } else {
+                    return 0
+                }
+            case "%":
+                if right != 0 {
+                    return left % right
+                } else {
+                    return 0
+                }
+            default:
+                return 0
+            }
+        } else if let lastArg = args.last {
+            if lastArg == "count" {
+                return args.count - 1
+            } else if lastArg == "avg" {
+                var sum = 0
+                for arg in args.dropLast() {
+                    if let number = Int(arg) {
+                        sum += number
+                    }
+                }
+                return sum / max(1, args.count - 1)
+            } else if lastArg == "fact" {
+                if let number = Int(args.first ?? "0"), number >= 0 {
+                    if number == 0 || number == 1 {
+                        return 1
+                    } else {
+                        var factorial = 1
+                        for i in 1...number {
+                            factorial *= i
+                        }
+                        return factorial
+                    }
+                }
+            }
+        }
+        
+        return 0
+//    return -1
 }
 
 func calculate(_ arg: String) -> Int {
-    return -1
+    let result = arg.split(separator: " ").map { String($0) }
+        return calculate(result)
+//    return -1
 }
 
 //: Below this are the test expressions/calls to verify if your code is correct.
